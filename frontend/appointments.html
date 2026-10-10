@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Management - Healthcare Management System</title>
+  <meta name="description" content="Book patient appointments, reschedule, cancel visits, and filter by doctor, patient, date and status.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">MedCare HMS</div>
+          <div class="brand-subtitle">College Project</div>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="patients.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Patients</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="doctors.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"></path>
+              <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
+              <circle cx="20" cy="10" r="2"></circle>
+            </svg>
+            <span>Doctors</span>
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="appointments.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Appointments</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="schedules.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Doctor Schedules</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="db-status-pill">
+          <span class="status-dot"></span>
+          <span>MySQL & Spring Boot Connected</span>
+        </div>
+        <div>Port 8080 Active</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <h1 class="page-title">Appointment Management</h1>
+          <div class="breadcrumb">Bookings &bull; Schedule, Reschedule, Filter &amp; Cancel Consultations</div>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-primary" id="open-book-modal-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>+ Book New Appointment</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="page-body">
+        <!-- Control Bar: Multi-Attribute Filters (Date, Doctor, Patient, Status) -->
+        <div class="control-bar">
+          <div class="search-filter-group">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Filter Date</label>
+              <input type="date" id="filter-date" class="search-input" style="height: 38px; padding-left: 12px; width: 160px;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Doctor</label>
+              <select id="filter-doctor" class="filter-select" style="height: 38px; min-width: 170px;">
+                <option value="">All Doctors</option>
+                <!-- JS filled -->
+              </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Patient</label>
+              <select id="filter-patient" class="filter-select" style="height: 38px; min-width: 170px;">
+                <option value="">All Patients</option>
+                <!-- JS filled -->
+              </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Status</label>
+              <select id="filter-status" class="filter-select" style="height: 38px;">
+                <option value="">All Statuses</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div style="align-self: flex-end; display: flex; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" id="apply-filters-btn" style="height: 38px;">Apply Filters</button>
+              <button class="btn btn-secondary btn-sm" id="reset-filters-btn" style="height: 38px;">Reset</button>
+            </div>
+          </div>
+          <div>
+            <span class="badge-counter" id="appointment-count-badge">0 Appointments</span>
+          </div>
+        </div>
+
+        <!-- Appointments Table Card -->
+        <div class="content-card">
+          <div class="content-card-header">
+            <h2 class="card-heading">Hospital Appointments List</h2>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Appt ID</th>
+                  <th>Patient Name</th>
+                  <th>Assigned Doctor</th>
+                  <th>Date</th>
+                  <th>Time Slot</th>
+                  <th>Status</th>
+                  <th>Notes Preview</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-table-body">
+                <tr>
+                  <td colspan="8" style="text-align: center; padding: 24px;">Loading appointments from MySQL...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Book / Edit / Reschedule Appointment Modal Dialog -->
+  <dialog class="modal-dialog" id="appointment-modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="appointment-modal-title">Book New Appointment</h3>
+      <button class="modal-close-btn" id="close-appointment-modal-btn">&times;</button>
+    </div>
+    <form id="appointment-form">
+      <div class="modal-body">
+        <div id="appointment-form-alert" class="alert-banner alert-error" style="display: none;"></div>
+        <input type="hidden" id="appointment-id-input">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="appointment-patient-select">Patient *</label>
+            <select id="appointment-patient-select" class="form-control" required>
+              <option value="">-- Select Patient --</option>
+              <!-- JS Populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="appointment-doctor-select">Doctor *</label>
+            <select id="appointment-doctor-select" class="form-control" required>
+              <option value="">-- Select Doctor --</option>
+              <!-- JS Populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="appointment-date-input">Appointment Date *</label>
+            <input type="date" id="appointment-date-input" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="appointment-status-select">Status *</label>
+            <select id="appointment-status-select" class="form-control" required>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="appointment-start-time">Start Time *</label>
+            <input type="time" id="appointment-start-time" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="appointment-end-time">End Time *</label>
+            <input type="time" id="appointment-end-time" class="form-control" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="appointment-notes">General Notes (Optional)</label>
+            <textarea id="appointment-notes" class="form-control" placeholder="Symptoms, purpose of visit or consultation instructions"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-appointment-modal-btn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="save-appointment-btn">Confirm Booking</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Appointment Details Modal Dialog -->
+  <dialog class="modal-dialog" id="appointment-details-modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Appointment Complete Details</h3>
+      <button class="modal-close-btn" id="close-appt-details-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-list" id="appointment-details-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="dismiss-appt-details-btn">Close</button>
+    </div>
+  </dialog>
+
+  <div class="toast-container" id="toast-container"></div>
+  <script src="js/appointments.js"></script>
+</body>
+</html>

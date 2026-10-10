@@ -1,0 +1,15 @@
+package com.healthcare.repository;
+
+import com.healthcare.entity.DoctorSchedule;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, Long> {
+
+    List<DoctorSchedule> findByDoctorId(Long doctorId);
+
+    List<DoctorSchedule> findByDoctorIdAndDayOfWeek(Long doctorId, String dayOfWeek);
+}
